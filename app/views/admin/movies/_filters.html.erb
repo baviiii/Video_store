@@ -1,0 +1,13 @@
+<% if @allow_filter %>
+  <%= filters_for polymorphic_path([:admin, Movie]), remote: true do |filter| %>
+    <div class="filters-inner mb20">
+      <div class="row">
+        <!-- Filter list start -->
+<%= filter.on :active_selector, label: 'Active status', as: :select, options: options_for_select([[Movie.new(active: true).human_active, true], [Movie.new(active: false).human_active, false]], params[:active_selector] || %Q[]), input_html: { prompt: 'All' } %>
+<%= filter.on :by_keyword, label: 'Search by name or Description', as: :string %>
+        <!-- Filter list end -->
+        <%= render partial: 'shared/filter_controls' %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

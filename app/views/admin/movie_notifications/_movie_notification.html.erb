@@ -1,0 +1,56 @@
+<tr  >
+  <!-- table columns here  -->
+    <% if can_access_attribute?(:requested_on) %>
+      <td class="text-right  " style="width: 15%">
+        <%= movie_notification.requested_on %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:movie_copy) %>
+      <td class="text-left  " style="width: 56%">
+        <%= movie_notification.movie_copy&.decorate&.to_s %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:stock_type) %>
+      <td class="text-left  ">
+        <%= movie_notification.movie_copy.stock_type %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:active) %>
+      <td class="text-left  ">
+        <%= boolean_label(movie_notification.active, movie_notification.human_active) %>
+      </td>
+    <% end %>
+
+
+  <% if can?(:update,  (movie_notification.respond_to?(:object) ? movie_notification.object : movie_notification) ) %>
+    <% icon = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>' %>
+    <% full_icon = '<i class="fas fa-edit" aria-hidden="true"></i>' %>
+    <% form_path = edit_polymorphic_path([:admin, movie_notification], alt_list: 'movie_notification' ) %>
+  <% elsif can?(:read,  (movie_notification.respond_to?(:object) ? movie_notification.object : movie_notification) )  %>
+    <% icon = '<i class="fas fa-search" aria-hidden="true"></i>' %>
+    <% full_icon = '
+      <span class="fa-stack">
+        <i class="fa fa-search fa-stack-1x"></i>
+      </span>' %>
+    <% form_path = polymorphic_path([:admin, movie_notification], alt_list: 'movie_notification') %>
+  <% end %>
+
+
+<td class="minimal">
+
+    <% if can?(:update, (movie_notification.respond_to?(:object) ? movie_notification.object : movie_notification) ) %>
+      <%= link_to icon.html_safe, '#', title: 'Edit movie_notification',
+                  class: 'index-link modal-btn modal-edit', data: { 'form-url': form_path, alt_list: action_name } %>
+    <% end %>
+    
+  </td>
+
+  <!-- action buttons start -->
+  <!-- action buttons end -->
+  
+
+</tr>
+
+
+
+

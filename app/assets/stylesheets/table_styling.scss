@@ -1,0 +1,84 @@
+// Table style starts
+.table-actor_movies-responsive {
+
+tr td:nth-child(1), tr td.total:nth-child(1), tr td:not(.group):nth-child(1) a {
+  width: 79%;
+
+}
+}
+.table-order-responsive {
+
+tr td:nth-child(1), tr td.total:nth-child(1), tr td:not(.group):nth-child(1) a {
+  width: 15%;
+
+}
+tr td:nth-child(2), tr td.total:nth-child(2), tr td:not(.group):nth-child(2) a {
+  width: 15%;
+
+}
+tr td:nth-child(3), tr td.total:nth-child(3), tr td:not(.group):nth-child(3) a {
+  width: 16%;
+
+}
+tr td:nth-child(4), tr td.total:nth-child(4), tr td:not(.group):nth-child(4) a {
+  width: 36%;
+
+}
+}
+.table-movie_notification-responsive {
+
+tr td:nth-child(1), tr td.total:nth-child(1), tr td:not(.group):nth-child(1) a {
+  width: 15%;
+
+}
+tr td:nth-child(2), tr td.total:nth-child(2), tr td:not(.group):nth-child(2) a {
+  width: 56%;
+
+}
+}
+.table-movie_copy-responsive {
+
+tr td:nth-child(1), tr td.total:nth-child(1), tr td:not(.group):nth-child(1) a {
+  width: 32%;
+
+}
+tr td:nth-child(3), tr td.total:nth-child(3), tr td:not(.group):nth-child(3) a {
+  width: 16%;
+
+}
+tr td:nth-child(4), tr td.total:nth-child(4), tr td:not(.group):nth-child(4) a {
+  width: 16%;
+
+}
+tr td:nth-child(5), tr td.total:nth-child(5), tr td:not(.group):nth-child(5) a {
+  width: 19%;
+
+}
+}
+.table-movie-responsive {
+
+tr td:nth-child(2), tr td.total:nth-child(2), tr td:not(.group):nth-child(2) a {
+  width: 19%;
+
+}
+tr td:nth-child(3), tr td.total:nth-child(3), tr td:not(.group):nth-child(3) a {
+  width: 13%;
+
+}
+tr td:nth-child(4), tr td.total:nth-child(4), tr td:not(.group):nth-child(4) a {
+  width: 12%;
+
+}
+tr td:nth-child(5), tr td.total:nth-child(5), tr td:not(.group):nth-child(5) a {
+  width: 24%;
+
+}
+}
+.table-genre-responsive {
+
+tr td:nth-child(1), tr td.total:nth-child(1), tr td:not(.group):nth-child(1) a {
+  width: 70%;
+
+}
+}
+// Table style ends

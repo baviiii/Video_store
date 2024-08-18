@@ -1,0 +1,148 @@
+<!-- app/views/users_dashboard/index.html.erb -->
+<style>
+    /* General body styles */
+    body {
+        font-family: 'Open Sans', sans-serif; /* Example font */
+        line-height: 1.6;
+        color: #333;
+        background-color: #f4f4f9;
+    }
+
+    /* Buttons */
+    .btn {
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #004494;
+    }
+
+    /* Cards */
+    .card {
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top.img-fluid {
+        height: 200px; /* Adjusted for consistency */
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    .card-footer {
+        background-color: #ffffff;
+        padding: 10px 15px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    /* Improved search bar */
+    .form-control {
+        border: 2px solid #cccccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .form-control:focus {
+        border-color: #0056b3;
+    }
+
+    /* Responsive grid adjustments */
+    @media (max-width: 767px) {
+        .col-md-4 {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+    }
+
+    /* Enhancing the header */
+    .movie-header {
+        background-color: #ffffff;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Placeholder cover improvements */
+    .placeholder-cover {
+        background-image: url('path/to/default-placeholder.png'); /* Optional: Set a default background image */
+        background-size: cover;
+        background-position: center;
+    }
+
+</style>
+
+
+<h1>Welcome <%= current_user.first_name %>! Browse our Movie collection</h1>
+<p>Here is your personalized dashboard where you can find all your activities and settings.</p>
+
+<!-- Logout button -->
+<div class="text-right mb-2">
+  <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-danger' %>
+</div>
+
+
+<!-- User details -->
+<div class="user-details">
+  <h3>Your Details</h3>
+  <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
+  <p><strong>Email:</strong> <%= current_user.email %></p>
+
+</div>
+
+<!-- Movie list -->
+<div class="container mt-4">
+  <div class="row">
+    <% @movies.each do |movie| %>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <%# Check if the movie has a cover image uploaded %>
+          <% if movie.cover? %>
+            <%= image_tag(movie.cover.url, class: "card-img-top img-fluid", alt: movie.title) %>
+          <% else %>
+            <div class="placeholder-cover card-img-top"></div>
+          <% end %>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= movie.title %></h5>
+            <p class="card-text"><%= movie.description.truncate(100) %></p>
+            <div class="mt-auto">
+              <small class="text-muted">Content Rating: <%= movie.content_rating %></small>
+<!--               Uncomment the next line once you have a method to calculate the average rating -->
+               <small class="text-muted">Avg Rating: <%= '★' * movie.average_rating.to_i %></small>
+            </div>
+          </div>
+          <div class="card-footer">
+            <%= link_to 'View', users_dashboard_movie_path(movie), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

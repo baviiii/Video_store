@@ -1,0 +1,70 @@
+<tr  >
+  <!-- table columns here  -->
+    <% if can_access_attribute?(:order_date) %>
+      <td class="text-right  " style="width: 15%">
+        <%= order.order_date %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:return_due) %>
+      <td class="text-right  " style="width: 15%">
+        <%= order.return_due %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:status) %>
+      <td class="text-left  " style="width: 16%">
+        <%= order.status.respond_to?(:text) ? 
+          order.status.text : order.status.to_s %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:order_titles) %>
+      <td class="text-left  " style="width: 36%">
+        <%= order.order_titles %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:returned) %>
+      <td class="text-left  ">
+        <%= boolean_label(order.returned, order.human_returned) %>
+      </td>
+    <% end %>
+
+
+  <% if can?(:update,  (order.respond_to?(:object) ? order.object : order) ) %>
+    <% icon = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>' %>
+    <% full_icon = '<i class="fas fa-edit" aria-hidden="true"></i>' %>
+    <% form_path = edit_polymorphic_path([:admin, order], alt_list: 'order' ) %>
+  <% elsif can?(:read,  (order.respond_to?(:object) ? order.object : order) )  %>
+    <% icon = '<i class="fas fa-search" aria-hidden="true"></i>' %>
+    <% full_icon = '
+      <span class="fa-stack">
+        <i class="fa fa-search fa-stack-1x"></i>
+      </span>' %>
+    <% form_path = polymorphic_path([:admin, order], alt_list: 'order') %>
+  <% end %>
+
+
+<td class="minimal">
+
+    
+    <% if can?(:update, (order.respond_to?(:object) ? order.object : order) ) %>
+      <%= link_to icon.html_safe, '#', title: 'Edit order',
+                  class: 'index-link modal-btn modal-edit', data: { 'form-url': form_path, alt_list: action_name } %>
+    <% end %>
+    
+  </td>
+
+  <!-- action buttons start -->
+<td class="minimal">
+  
+  <%= link_to('Mark as returned'.html_safe,
+              returned_admin_order_path(order), method: "get",
+      class: 'btn mini btn-action action-button ' , style: "background: #00ff15;" , remote: true) %>
+  
+</td>
+  <!-- action buttons end -->
+  
+
+</tr>
+
+
+
+

@@ -1,0 +1,62 @@
+<tr  >
+  <!-- table columns here  -->
+
+    <% if can_access_attribute?(:order_titles) %>
+      <td class="text-left  ">
+        <%= outstanding_orders.order_titles %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:order_date) %>
+      <td class="text-right  ">
+        <%= outstanding_orders.order_date %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:return_due) %>
+      <td class="text-right  ">
+        <%= outstanding_orders.return_due %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:status) %>
+      <td class="text-left  ">
+        <%= outstanding_orders.status.respond_to?(:text) ? 
+          outstanding_orders.status.text : outstanding_orders.status.to_s %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:returned) %>
+      <td class="text-left  ">
+        <%= boolean_label(outstanding_orders.returned, outstanding_orders.human_returned) %>
+      </td>
+    <% end %>
+
+
+  <% if can?(:update,  (outstanding_orders.respond_to?(:object) ? outstanding_orders.object : outstanding_orders) ) %>
+    <% icon = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>' %>
+    <% full_icon = '<i class="fas fa-edit" aria-hidden="true"></i>' %>
+    <% form_path = edit_polymorphic_path([:admin, outstanding_orders], alt_list: 'outstanding_orders' ) %>
+  <% elsif can?(:read,  (outstanding_orders.respond_to?(:object) ? outstanding_orders.object : outstanding_orders) )  %>
+    <% icon = '<i class="fas fa-search" aria-hidden="true"></i>' %>
+    <% full_icon = '
+      <span class="fa-stack">
+        <i class="fa fa-search fa-stack-1x"></i>
+      </span>' %>
+    <% form_path = polymorphic_path([:admin, outstanding_orders], alt_list: 'outstanding_orders') %>
+  <% end %>
+
+
+<td class="minimal">
+    <% if can?(:update, (outstanding_orders.respond_to?(:object) ? outstanding_orders.object : outstanding_orders) ) %>
+      <%= link_to icon.html_safe, '#', title: 'Edit order',
+                  class: 'index-link modal-btn modal-edit', data: { 'form-url': form_path, alt_list: action_name } %>
+    <% end %>
+
+  </td>
+
+  <!-- action buttons start -->
+  <!-- action buttons end -->
+  
+
+</tr>
+
+
+
+

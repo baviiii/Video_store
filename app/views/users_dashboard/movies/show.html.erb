@@ -1,0 +1,255 @@
+<style>
+    .movie-detail-container {
+        width: 80%;
+        margin: auto;
+        background: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+
+    .movie-header {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .rating {
+        color: gold;
+    }
+
+    .tags {
+        font-style: italic;
+        color: #555;
+    }
+
+    .movie-content {
+        display: flex;
+    }
+
+    .movie-main {
+        flex: 3;
+        margin-right: 20px;
+    }
+
+    .movie-cover {
+        width: 100%;
+        max-width: 250px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .movie-side {
+        flex: 1;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .btn {
+        background-color: #0044cc;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .notification {
+        background-color: #ffffe0;
+        border-left: 5px solid #ffcc00;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .related-videos ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .related-videos a {
+        color: #0044cc;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .related-videos h3 {
+        margin-top: 0;
+    }
+
+    .formats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    .formats-table th, .formats-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .formats-table th {
+        background-color: #f2f2f2;
+    }
+
+    .select-format {
+        margin-bottom: 20px;
+    }
+
+    .notified {
+        background-color: #808080;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var isUserSignedIn = <%= user_signed_in?.to_json %>;
+
+        document.querySelectorAll('.notify-me-button').forEach(button => {
+            button.addEventListener('click', function () {
+                if (isUserSignedIn) {
+                    var movieCopyId = this.dataset.movieCopyId;
+                    var buttonElement = this;
+
+                    fetch('/movie_notifications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            movie_notification: { movie_copy_id: movieCopyId }
+                        })
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              alert(data.message);
+                              buttonElement.textContent = "Notified";
+                              buttonElement.disabled = true;
+                              buttonElement.classList.add("notified");
+                          } else {
+                              alert(data.message);
+                          }
+                      })
+                      .catch(error => {
+                          alert('Error adding to the waitlist: ' + error);
+                      });
+                } else {
+                    window.location.href = '<%= new_user_session_path %>';
+                }
+            });
+        });
+
+        document.querySelectorAll('.add-to-cart-button').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                var url = this.dataset.url;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        order: { movie_id: this.dataset.movieId, movie_copy_id: this.dataset.movieCopyId }
+                    })
+                })
+                  .then(response => {
+                      if (response.ok) {
+                          window.location.href = '<%= cart_users_dashboard_orders_path %>';
+                      } else {
+                          return response.json().then(data => {
+                              alert(data.message);
+                          });
+                      }
+                  })
+                  .catch(error => {
+                      alert('Error adding to the cart: ' + error);
+                  });
+            });
+        });
+    });
+</script>
+
+<div class="movie-detail-container">
+  <div class="movie-header">
+    <h1><%= @movie.title %> [<%= @movie.content_rating.humanize %>]</h1>
+    <div class="rating">Rating: <%= star_rating(@movie.average_rating) %></div>
+    <div class="tags"><%= @movie.genres.map(&:name).join(', ') %></div>
+  </div>
+
+  <div class="movie-content">
+    <div class="movie-main">
+      <% if @movie.cover.present? %>
+        <%= image_tag(@movie.cover.url, class: 'movie-cover', alt: @movie.title) %>
+      <% else %>
+        <p><strong>Cover:</strong> N/A</p>
+      <% end %>
+
+      <p><strong>Description:</strong> <%= sanitize(@movie.description) %></p>
+      <p><strong>Cast:</strong> <%= @movie.actors.map(&:first_name).join(', ') %></p>
+      <p><strong>Released:</strong> <%= @movie.released_on.strftime("%B %d, %Y") if @movie.released_on %></p>
+
+      <table class="formats-table">
+        <thead>
+        <tr>
+          <th>Format</th>
+          <th>Copies On Hand</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @movie.movie_copies.each do |copy| %>
+          <tr>
+            <td><%= copy.stock_type.to_s.capitalize %></td>
+            <td><%= copy.on_hand %></td>
+            <td><%= number_to_currency(copy.rental_price_cents / 100.0) %></td>
+            <td>
+              <% if copy.on_hand > 0 %>
+                <% if user_signed_in? %>
+                  <button class="btn add-to-cart-button" data-url="<%= users_dashboard_orders_path %>" data-movie-id="<%= @movie.id %>" data-movie-copy-id="<%= copy.id %>">Add to Order</button>
+                <% else %>
+                  <%= link_to 'Log in to Order', new_user_session_path, class: 'btn' %>
+                <% end %>
+              <% else %>
+                <% if user_signed_in? %>
+                  <% notification = current_user.movie_notifications.find_by(movie_copy_id: copy.id, canceled_on: nil) %>
+                  <% if notification.nil? %>
+                    <button class="btn notify-me-button" data-movie-copy-id="<%= copy.id %>">Notify Me</button>
+                  <% else %>
+                    <button class="btn notified" disabled>Notified</button>
+                  <% end %>
+                <% else %>
+                  <%= link_to 'Log in to Notify', new_user_session_path, class: 'btn' %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <div class="movie-side">
+        <div class="related-videos">
+          <h3>Related Videos</h3>
+          <ul>
+            <% @related_movies.each do |related_movie| %>
+              <li>
+                <%= link_to "#{related_movie.title} [#{related_movie.content_rating.humanize}]", users_dashboard_movie_path(related_movie) %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

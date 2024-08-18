@@ -1,0 +1,70 @@
+<tr  >
+  <!-- table columns here  -->
+    <% if can_access_attribute?(:cover) %>
+      <td class="text-left  ">
+        <%= link_to (image_tag movie.cover.url(:thumb) if movie.cover&.file.present?),
+  movie.cover.url, target: '_blank' if movie.cover.present? %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:title) %>
+      <td class="text-left  " style="width: 19%">
+        <%= movie.title %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:year) %>
+      <td class="text-left  " style="width: 13%">
+        <%= movie.year %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:content_rating) %>
+      <td class="text-left  " style="width: 12%">
+        <%= movie.content_rating.respond_to?(:text) ? 
+          movie.content_rating.text : movie.content_rating.to_s %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:description) %>
+      <td class="text-left  " style="width: 24%">
+        <%= strip_tags(movie.description) %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:active) %>
+      <td class="text-left  ">
+    <%= boolean_label(movie.active?, movie.active? ? 'Active' : 'Inactive') %>
+      </td>
+    <% end %>
+
+
+  <% if can?(:update,  (movie.respond_to?(:object) ? movie.object : movie) ) %>
+    <% icon = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>' %>
+    <% full_icon = '<i class="fas fa-edit" aria-hidden="true"></i>' %>
+    <% form_path = edit_polymorphic_path([:admin, movie], alt_list: 'movie' ) %>
+  <% elsif can?(:read,  (movie.respond_to?(:object) ? movie.object : movie) )  %>
+    <% icon = '<i class="fas fa-search" aria-hidden="true"></i>' %>
+    <% full_icon = '
+      <span class="fa-stack">
+        <i class="fa fa-search fa-stack-1x"></i>
+      </span>' %>
+    <% form_path = polymorphic_path([:admin, movie], alt_list: 'movie') %>
+  <% end %>
+
+
+<td class="minimal">
+    
+    <% if can?(:update, (movie.respond_to?(:object) ? movie.object : movie) ) %>
+      <%= link_to(full_icon.html_safe,
+                  edit_polymorphic_path([:admin, movie]),
+          title: 'Edit movie',
+          class: 'index-link') %>
+    <% end %>
+    
+  </td>
+
+  <!-- action buttons start -->
+  <!-- action buttons end -->
+  
+
+</tr>
+
+
+
+

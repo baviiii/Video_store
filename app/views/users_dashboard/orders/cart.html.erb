@@ -1,0 +1,103 @@
+<!-- app/views/users_dashboard/orders/cart.html.erb -->
+<style>
+    .cart-detail-container {
+        width: 80%;
+        margin: auto;
+        background: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .cart-header {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cart-main {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .btn {
+        background-color: #0044cc;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .formats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    .formats-table th, .formats-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .formats-table th {
+        background-color: #f2f2f2;
+    }
+
+    .movie-cover {
+        width: 100px;
+        height: auto;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="cart-detail-container">
+  <div class="cart-header">
+    <h1>Your Cart</h1>
+    <%= link_to 'Continue Shopping', users_dashboard_movies_path, class: 'btn' %>
+  </div>
+
+  <div class="cart-content">
+    <% if @order.movie_copies.any? %>
+      <div class="cart-main">
+        <table class="formats-table">
+          <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @order.movie_copies.each do |copy| %>
+            <tr>
+              <td><%= image_tag(copy.movie.cover.url, alt: copy.movie.title, class: 'movie-cover') if copy.movie.cover.present? %></td>
+              <td><%= copy.movie.title %></td>
+              <td><%= copy.stock_type %></td>
+              <td>
+                <%= link_to 'Remove', remove_from_cart_users_dashboard_orders_path(movie_copy_id: copy.id), method: :delete, class: 'btn' %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= link_to 'Checkout', checkout_users_dashboard_orders_path, method: :patch, class: 'btn' %>
+      </div>
+    <% else %>
+      <p>Your cart is empty.</p>
+    <% end %>
+  </div>
+</div>

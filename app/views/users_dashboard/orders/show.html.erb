@@ -1,0 +1,117 @@
+<!-- app/views/users_dashboard/orders/show.html.erb -->
+<style>
+    .order-detail-container {
+        width: 80%;
+        margin: auto;
+        background: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .order-header {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .order-content {
+        display: flex;
+    }
+
+    .order-main {
+        flex: 3;
+        margin-right: 20px;
+    }
+
+    .order-side {
+        flex: 1;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn {
+        background-color: #0044cc;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .formats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    .formats-table th, .formats-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .formats-table th {
+        background-color: #f2f2f2;
+    }
+
+    .movie-cover {
+        width: 100px; /* Adjust the width as needed */
+        height: auto;
+        border-radius: 4px;
+    }
+
+</style>
+  <!-- app/views/users_dashboard/orders/show.html.erb -->
+  <div class="order-detail-container">
+    <div class="order-header">
+      <h1>Order ##<%= @order.id %></h1>
+      <div>Order Date: <%= @order.order_date.strftime("%B %d, %Y") %></div>
+      <% if @order.return_due %>
+        <div>Return Due: <%= @order.return_due.strftime("%B %d, %Y") %></div>
+      <% end %>
+    </div>
+  </div>
+
+
+    <div class="order-content">
+      <div class="order-main">
+        <h3>Ordered Movies</h3>
+        <table class="formats-table">
+          <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Format</th>
+            <th>Price</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @order.movie_copies.each do |copy| %>
+            <tr>
+              <td><%= image_tag(copy.movie.cover.url, alt: copy.movie.title, class: 'movie-cover') if copy.movie.cover.present? %></td>
+              <td><%= copy.movie.title %></td>
+              <td><%= copy.stock_type.to_s.capitalize %></td>
+              <td><%= number_to_currency(copy.rental_price_cents / 100.0) %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="order-side">
+        <h3>Related Movies</h3>
+        <ul>
+          <% @related_movies.each do |movie| %>
+            <li><%= link_to "#{movie.title} [#{movie.content_rating}]", users_dashboard_movie_path(movie) %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<!-- app/views/users_dashboard/orders/previous_orders.html.erb -->
+<h2>Outstanding Orders</h2>
+
+<% if @outstanding_orders.any? %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Date</th>
+      <th>Return Date</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @outstanding_orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%B %d, %Y") %></td>
+        <td><%= order.return_due.present? ? order.return_due.strftime("%B %d, %Y") : "N/A" %></td>
+        <td><%= order.status.to_s.capitalize %></td>
+        <td><%= link_to 'View Details', users_dashboard_order_path(order), class: 'btn btn-info' %></td>
+
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No outstanding orders</p>
+<% end %>
+
+<h2>Completed Orders</h2>
+
+<% if @completed_orders.any? %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @completed_orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%B %d, %Y") %></td>
+        <td><%= order.status.to_s.capitalize %></td>
+        <td><%= link_to 'View Details', users_dashboard_order_path(order), class: 'btn btn-info' %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No completed orders</p>
+<% end %>

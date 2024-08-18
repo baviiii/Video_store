@@ -1,0 +1,168 @@
+<style>
+    /* General body styles */
+    body {
+        font-family: 'Open Sans', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f4f4f9;
+    }
+
+    /* Buttons */
+    .btn {
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #004494;
+    }
+
+    /* Cards */
+    .card {
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top.img-fluid {
+        height: 200px; /* Adjusted for consistency */
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    .card-footer {
+        background-color: #ffffff;
+        padding: 10px 15px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    /* Improved search bar */
+    .form-control {
+        border: 2px solid #cccccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .form-control:focus {
+        border-color: #0056b3;
+    }
+
+    /* Responsive grid adjustments */
+    @media (max-width: 767px) {
+        .col-md-4 {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+    }
+
+    /* Enhancing the header */
+    .movie-header {
+        background-color: #ffffff;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Placeholder cover improvements */
+    .placeholder-cover {
+        height: 200px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        font-size: 1.5rem;
+    }
+
+    /* Filter improvements */
+    .ibox-body {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ibox-filters {
+        margin-bottom: 20px;
+    }
+
+    .filter
+
+</style>
+<div class="page-content <%= "#{controller.controller_name}_#{controller.action_name}" %>">
+
+  <div class="ibox-body">
+    <div class="ibox-filters">
+      <%= filters_for users_dashboard_movies_path, remote: true do |filter| %>
+        <div class="filters-inner mb20">
+          <div class="row">
+            <%= filter.on :title, label: 'Search by Title', as: :string, input_html: { placeholder: 'Enter movie title', class: 'form-control' } %>
+
+            <%#= filter.on :by_genre, options_for_select(@genres.map { |g| [g.name, g.id] }, selected: params[:by_genre]), { prompt: 'All Genres' }, class: 'form-control' %>
+            <%#= filter.on :by_content_rating do %>
+              <%#= select_tag :by_content_rating, options_for_select(Movie.content_ratings.keys.map { |content_rating| [content_rating.humanize, content_rating] }, selected: params[:content_rating]), include_blank: true, class: "form-control" %>
+            <%# end %>
+            <%= filter.on :average_rating, label: 'Min. Rating', as: :number, input_html: { min: 0, max: 5, step: 0.5, class: 'form-control', placeholder: '1.0' } %>
+            <%= render partial: 'shared/filter_controls' %>
+          </div>
+        </div>
+        </div>
+      <% end %>
+      </div>
+
+  <!-- Movie list -->
+  <div class="container mt-4">
+    <div class="row">
+      <% @movies.each do |movie| %>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <% if movie.cover? %>
+              <%= image_tag(movie.cover.url, class: "card-img-top img-fluid", alt: movie.title) %>
+            <% else %>
+              <div class="placeholder-cover card-img-top">No Image</div>
+            <% end %>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= movie.title %></h5>
+              <p class="card-text"><%= movie.description.truncate(100) %></p>
+              <div class="mt-auto">
+                <small class="text-muted">Content Rating: <%= movie.content_rating %></small><br>
+                <small class="text-muted">Genre: <%= movie.genres.map(&:name).join(', ') %></small><br>
+                <small class="text-muted">Actors: <%= movie.actors.map(&:first_name).join(', ') %></small>
+                <div class="rating mt-2">Rating: <%= star_rating(movie.average_rating) %></div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <%= link_to 'View', users_dashboard_movie_path(movie), class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,267 @@
+<style>
+.gn-menu-main {
+background-color: #333;
+color: white;
+list-style-type: none;
+padding: 0;
+margin: 0;
+display: flex;
+align-items: center;
+justify-content: space-between;
+font-size: 18px;
+}
+
+.gn-menu-wrapper {
+background-color: #444;
+padding: 10px;
+position: absolute;
+top: 60px;
+left: 0;
+width: 200px;
+display: none;
+z-index: 1000;
+}
+
+.gn-trigger:hover .gn-menu-wrapper {
+display: block;
+}
+
+.gn-menu {
+list-style-type: none;
+padding: 0;
+margin: 0;
+}
+
+.gn-menu a {
+color: white;
+text-decoration: none;
+padding: 10px;
+display: block;
+}
+
+.menu-option {
+background-color: #555;
+border-bottom: 1px solid #444;
+}
+
+.menu-option:hover {
+background-color: #666;
+}
+
+.gn-icon-menu {
+cursor: pointer;
+padding: 10px;
+color: white;
+}
+
+.header-logo-container {
+padding: 10px;
+}
+
+.header-logo a {
+color: white;
+font-size: 24px;
+font-weight: bold;
+text-decoration: none;
+}
+
+.logout-btn, .login-btn, .signup-btn {
+margin-left: auto;
+padding: 10px;
+}
+
+.codrops-icon-drop {
+color: white;
+text-decoration: none;
+}
+
+.codrops-icon-drop:hover {
+text-decoration: underline;
+}
+
+/* General Styles */
+body {
+font-family: 'Open Sans', sans-serif;
+background-color: #f8f9fa;
+margin: 0;
+padding: 0;
+}
+
+.site-content {
+padding: 20px;
+}
+
+.breadcrumb-in {
+background-color: #ffffff;
+padding: 15px;
+margin-bottom: 20px;
+border-radius: 5px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.site-breadcrumb {
+margin: 0;
+padding: 0;
+list-style: none;
+}
+.btn {
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.site-breadcrumb li {
+display: inline;
+font-size: 16px;
+}
+
+.site-breadcrumb li+li:before {
+padding: 8px;
+color: #6c757d;
+content: "/";
+}
+
+.breadcrumb-in ul li a {
+color: #007bff;
+text-decoration: none;
+}
+
+.breadcrumb-in ul li a:hover {
+text-decoration: underline;
+}
+
+.footer {
+background-color: #343a40;
+color: #ffffff;
+padding: 20px 0;
+text-align: center;
+}
+
+.footer a {
+color: #ffffff;
+}
+
+.modal-content {
+border-radius: 10px;
+}
+
+.btn-new {
+background-color: #007bff;
+color: #ffffff;
+border-radius: 30px;
+padding: 10px 20px;
+font-size: 14px;
+font-weight: bold;
+text-transform: uppercase;
+}
+
+.btn-new:hover {
+background-color: #0056b3;
+}
+
+.filter-section {
+background-color: #fff;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+margin-bottom: 20px;
+}
+
+.filter-section input,
+.filter-section select {
+margin-bottom: 10px;
+}
+
+.filter-section button {
+background-color: #007bff;
+color: #ffffff;
+border: none;
+padding: 10px 20px;
+border-radius: 30px;
+font-size: 14px;
+font-weight: bold;
+text-transform: uppercase;
+}
+
+.filter-section button:hover {
+background-color: #0056b3;
+}
+
+</style>
+
+<ul id="gn-menu" class="gn-menu-main">
+  <li class="gn-trigger">
+    <a class="gn-icon gn-icon-menu"><i class="fa fa-bars"></i></a>
+    <nav class="gn-menu-wrapper">
+      <div class="gn-scroller">
+        <ul class="gn-menu">
+          <% if can?(:read, Order) %>
+            <li class="menu-option <%= is_active_controller('movies') %>">
+              <%= link_to user_dashboard_path do %>
+                <i class="fa fa-fw fa-home"></i> Home
+              <% end %>
+            </li>
+          <% end %>
+
+          <% if can?(:read, Movie) %>
+            <li class="menu-option <%= is_active_controller('movies') %>">
+              <%= link_to users_dashboard_movies_path do %>
+                <i class="fa fa-fw fa-film"></i> Movies
+              <% end %>
+            </li>
+          <% end %>
+
+          <% if can?(:read, Order) %>
+            <li class="menu-option <%= is_active_controller('orders') %>">
+              <%= link_to previous_orders_users_dashboard_orders_path do %>
+                <i class="fa fa-fw fa-shopping-bag"></i> Orders
+              <% end %>
+            </li>
+          <% end %>
+
+          <% if can?(:read, MovieNotification) %>
+            <li class="menu-option <%= is_active_controller('waitlists') %>">
+              <%= link_to users_dashboard_waitlists_path do %>
+                <i class="fa fa-fw fa-list"></i> Waitlists
+              <% end %>
+            </li>
+          <% end %>
+
+          <% if can?(:read, Order) %>
+            <li class="menu-option <%= is_active_controller('cart') %>">
+              <%= link_to cart_users_dashboard_orders_path do %>
+                <i class="fa fa-fw fa-shopping-cart"></i> Cart
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
+  </li>
+
+  <li class='header-logo-container'>
+    <div class='header-logo'>
+      <%= link_to 'Video Blast', root_path, class: 'menu-logo' %>
+    </div>
+  </li>
+
+  <% if user_signed_in? %>
+    <li class="logout-btn">
+      <%= link_to destroy_user_session_path, method: :delete, class: 'btn btn-logout' do %>
+        [<%= current_user.first_name %>] Log Out
+      <% end %>
+    </li>
+  <% else %>
+    <li class="login-btn">
+      <%= link_to 'Log In', new_user_session_path, class: 'codrops-icon codrops-icon-drop' %>
+    </li>
+    <li class="signup-btn">
+      <%= link_to 'Sign Up', new_user_registration_path, class: 'codrops-icon codrops-icon-drop' %>
+    </li>
+  <% end %>
+</ul>

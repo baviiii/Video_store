@@ -1,0 +1,75 @@
+<tr  >
+  <!-- table columns here  -->
+    <% if can_access_attribute?(:name) %>
+      <td class="text-left priority1 ">
+        <%= user.name %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:suburb) %>
+      <td class="text-left  ">
+        <%= user.suburb %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:state) %>
+      <td class="text-left  ">
+        <%= user.state %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:gender) %>
+      <td class="text-left  ">
+        <%= user.gender.respond_to?(:text) ? 
+          user.gender.text : user.gender.to_s %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:email) %>
+      <td class="text-left  ">
+        <%= mail_to user.email %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:admin) %>
+      <td class="text-left  ">
+        <%= boolean_label(user.admin, user.human_admin) %>
+      </td>
+    <% end %>
+    <% if can_access_attribute?(:active) %>
+      <td class="text-left  ">
+        <%= boolean_label(user.active?, user.active? ? 'Active' : 'Inactive') %>
+      </td>
+    <% end %>
+
+
+  <% if can?(:update,  (user.respond_to?(:object) ? user.object : user) ) %>
+    <% icon = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>' %>
+    <% full_icon = '<i class="fas fa-edit" aria-hidden="true"></i>' %>
+    <% form_path = edit_polymorphic_path([:admin, user], alt_list: 'user' ) %>
+  <% elsif can?(:read,  (user.respond_to?(:object) ? user.object : user) )  %>
+    <% icon = '<i class="fas fa-search" aria-hidden="true"></i>' %>
+    <% full_icon = '
+      <span class="fa-stack">
+        <i class="fa fa-search fa-stack-1x"></i>
+      </span>' %>
+    <% form_path = polymorphic_path([:admin, user], alt_list: 'user') %>
+  <% end %>
+
+
+<td class="minimal">
+
+    <% if can?(:update, (user.respond_to?(:object) ? user.object : user) ) %>
+      <%= link_to(full_icon.html_safe,
+                  edit_polymorphic_path([:admin, user]),
+          title: 'Edit user',
+          class: 'index-link') %>
+    <% end %>
+
+    
+  </td>
+
+  <!-- action buttons start -->
+  <!-- action buttons end -->
+  
+
+</tr>
+
+
+
+

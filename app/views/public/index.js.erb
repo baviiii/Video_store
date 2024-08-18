@@ -1,0 +1,2 @@
+
+$('.<%= "#{controller.controller_name}_#{controller.action_name}" %>').html("<%= j (render partial: @table_name.presence || 'table') %>");

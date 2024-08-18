@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
+<body>
+<h1>Order Receipt</h1>
+<p>Thank you for your order!</p>
+
+<% if @order%>
+  <h2>Order Details</h2>
+  <p>Order ID: <%= @order.id %></p>
+  <p>User ID: <%= @order.user_id %></p>
+  <p>User Name: <%= @order.user.first_name %></p>
+  <p>Order Date: <%= @order.order_date.strftime("%B %d, %Y") if @order.order_date %></p>
+  <p>Return Due: <%= @order.return_due.strftime("%B %d, %Y") if @order.return_due %></p>
+
+  <h2>Ordered Movies list</h2>
+  <ul>
+    <% if @movie_copies %>
+      <h2>Ordered Movies list</h2>
+      <ul>
+        <% @movie_copies.each do |movie_copy| %>
+          <li><%= movie_copy.movie.title %> - <%= movie_copy.stock_type %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No movies ordered</p>
+    <% end %>
+
+  </ul>
+<% else %>
+  <p>No order found</p>
+<% end %>
+</body>
+</html>

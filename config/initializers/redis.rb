@@ -1,0 +1,1 @@
+$redis = Redis::Namespace.new('bavindu_video_blast_store', redis: Redis.new)
